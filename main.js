@@ -1,6 +1,17 @@
 let fs = require('fs');
 
-const log = require('../../utils/log.js')
+let log = {
+    log: function () {
+        console.log(...arguments)
+    },
+    dev: true
+}
+
+try {
+    log = require('../../utils/log.js')
+} catch (error) {
+    
+}
 
 module.exports = class funCommand {
     mods = null
@@ -15,14 +26,19 @@ module.exports = class funCommand {
     }
 
     async loadAllModules() {
-        this.mods = await this.moduleToArray(this.exploreDir('listener/fun/'));
+        if(log.dev) {
+            this.mods = await this.moduleToArray(this.exploreDir('./'));
+        } else {
+            this.mods = await this.moduleToArray(this.exploreDir('listener/fun/'));
+        }
         log.log('info', 'fun', `Loaded ${this.mods.length} fun modules`)
     }
 
     async moduleToArray(path){
+        let startString = log.dev ? './' : '../../';
         let mods = [];
         for(let i = 0; i < path.length; i++){
-            let m = require("../../"+path[i])
+            let m = require(startString+path[i])
             mods.push({
                 name: path[i].split('/')[ path[i].split('/').length-1].split('.')[0],
                 path: path[i],
@@ -67,14 +83,14 @@ module.exports = class funCommand {
             let filePath = path + file;
             let stat = fs.statSync(filePath);
             if(stat.isDirectory()){
-                if(!filePath.includes('__')){
+                if(!filePath.includes('__') && !filePath.includes('node_modules') && !filePath.startsWith('.git')){
                     let tmp = this.exploreDir(filePath + '/');
                     for(let j = 0; j < tmp.length; j++){
                         outFiles.push(filePath+"/"+tmp[j]);
                     }
                 }
             } else {
-                if(file.endsWith('.js') && !file.includes('main.js')){
+                if(file.endsWith('.js') && !file.includes('main.js') && !file.includes('bot_test.js')){
                     outFiles.push(file);
                 }
             }
