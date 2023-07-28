@@ -1,13 +1,9 @@
 let fs = require('fs');
 const { Client, GatewayIntentBits, Partials } = require('discord.js');
 const funCommand = new (require("./main.js"))()
+require("dotenv").config
+let token = process.env.token
 
-let token = ""
-try {
-    token = fs.readFileSync('./token.txt', 'utf8');
-} catch (error) {
-    throw new Error("No token.txt file found. Please create one and paste your bot token in it.");
-}
 
 const client = new Client({ 
     intents: [
