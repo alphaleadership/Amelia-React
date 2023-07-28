@@ -8,3 +8,9 @@ Comment contribuer ? simple:
 À la prochaine mise à jour d'amelia -> pop ton module est en production
 
 Un exemple ? `./__template/main.js`
+
+# Tests: 
+Création d'un fichier `token.txt` avec le token de votre bot de test.
+
+ne pas oublier d'activer:
+![](./.github/perms.png)
